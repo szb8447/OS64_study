@@ -65,7 +65,7 @@ Label_Start:
 ;======= open address A20
     push ax
     in al, 92h
-    or al, 0000000010b
+    or al, 00000010b
     out 92h, al
     pop ax
 
@@ -165,7 +165,7 @@ Label_No_LoaderBin:
 Label_FileName_Found:
 
     mov ax, RootDirSectors
-    add di, 0ffe0h
+    and di, 0ffe0h
     add di, 01ah
     mov cx, word [es:di]
     push cx
@@ -240,7 +240,7 @@ Label_Mov_Kernel:
     mov  dx, RootDirSectors
     add  ax, dx
     add  ax, SectorBalance
-    add  bx, [BPB_BytesPerSec]
+    ;add  bx, [BPB_BytesPerSec]
     jmp  Label_Go_On_Loading_File
 
 
@@ -292,7 +292,7 @@ Label_Get_Mem_Struct:
 Label_Get_Mem_Fail:
 
     mov  ax, 1301h
-    mov  bx, 000fh
+    mov  bx, 008ch
     mov  dx, 0500h  ;row 5
     mov  cx, 23
     push ax
@@ -343,7 +343,7 @@ Label_Get_Mem_OK:
 ;=================  Fail
 
     mov  ax, 1301h
-    mov  bx, 000fh
+    mov  bx, 008Ch
     mov  dx, 0900h  ;row 9
     mov  cx, 23
     push ax
@@ -390,7 +390,7 @@ Label_Get_Mem_OK:
 
 Label_SVGA_Mode_Info_Get:
 
-    mov cx, word [es:si]
+    mov cx, word [es:esi]
 
 ;=========   display SVGA mode information
 
@@ -416,9 +416,9 @@ Label_SVGA_Mode_Info_Get:
 
     cmp ax, 004fh
 
-    jz Label_SVGA_Mode_Info_FAIL
+    jnz Label_SVGA_Mode_Info_FAIL
 
-    add esi, 2
+    add edi, 2
     add esi, 0x100
 
     jmp Label_SVGA_Mode_Info_Get
@@ -426,14 +426,14 @@ Label_SVGA_Mode_Info_Get:
 Label_SVGA_Mode_Info_FAIL:
 
     mov  ax, 1301h
-    mov  bx, 000fh
+    mov  bx, 008ch
     mov  dx, 0d00h  ;row 13
     mov  cx, 24
     push ax
     mov  ax, ds
     mov  es, ax
     pop  ax
-    mov bp, GetSVGAVModeInfoErrMessage
+    mov bp, GetSVGAModeInfoErrMessage
     int 10h
 
 Label_SET_SVGA_Mode_VESA_VBE_FAIL:
@@ -454,7 +454,7 @@ Label_SVGA_Mode_Info_Finish:
     int 10h
 
 ;=========== set the SVGA mode(VESA VBE)
-    jmp $
+    ;jmp $
     mov ax, 4f02h
     mov bx, 4180h ;===========mode : 0x180 or 0x143
     int 10h
@@ -731,5 +731,5 @@ GetSVGAVBEInfoErrMessage: db "Get SVGA VBE Info ERROR"
 GetSVGAVBEInfoOKMessage: db "Get SVGA VBE Info SUCCESSFUL!"
 
 StartGetSVGAVModeInfoMessage: db "Start Get SVGA Mode Info"
-GetSVGAVModeInfoErrMessage: db "Get SVGA Mode Info ERROR"
+GetSVGAModeInfoErrMessage: db "Get SVGA Mode Info ERROR"
 GetSVGAVModeInfoOKMessage: db "Get SVGA Mode Info SUCCESSFUL!"
