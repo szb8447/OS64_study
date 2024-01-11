@@ -400,8 +400,8 @@ Label_SVGA_Mode_Info_Get:
     mov al, ch
     call Label_DispAL
 
-    mov ax,00h
-    mov al,cl
+    mov ax, 00h
+    mov al, cl
     call Label_DispAL
 
     pop ax
@@ -690,7 +690,7 @@ Label_DispAL:
     mov al, dl
     loop .begin
 
-    mov[DisplayPosition], edi
+    mov [DisplayPosition], edi
 
     pop edi
     pop edx
