@@ -418,8 +418,8 @@ Label_SVGA_Mode_Info_Get:
 
     jnz Label_SVGA_Mode_Info_FAIL
 
-    add edi, 2
-    add esi, 0x100
+    add esi, 2
+    add edi, 0x100
 
     jmp Label_SVGA_Mode_Info_Get
 
@@ -452,16 +452,17 @@ Label_SVGA_Mode_Info_Finish:
     pop  ax
     mov bp, GetSVGAVModeInfoOKMessage
     int 10h
-
-;=========== set the SVGA mode(VESA VBE)
     ;jmp $
+;=========== set the SVGA mode(VESA VBE)
+    
     mov ax, 4f02h
     mov bx, 4180h ;===========mode : 0x180 or 0x143
     int 10h
-
+    
     cmp ax, 004fh
+    
     jnz Label_SET_SVGA_Mode_VESA_VBE_FAIL
-
+    
 ;========= init IDT GDT goto protect mode
 
     cli            ;===========close interrupt
