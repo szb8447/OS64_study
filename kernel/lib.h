@@ -306,7 +306,7 @@ inline int strncmp(char * FirstPart,char * SecondPart,long Count)
 
 */
 
-inline int strlen(char * String)
+int strlen(char * String)
 {
 	register int __res;
 	__asm__	__volatile__	(	"cld	\n\t"
@@ -351,7 +351,6 @@ inline unsigned long bit_clean(unsigned long * addr,unsigned long nr)
 /*
 
 */
-
 inline unsigned char io_in8(unsigned short port)
 {
 	unsigned char ret = 0;

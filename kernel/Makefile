@@ -5,14 +5,28 @@ head.o: head.S
 	gcc -E head.S > head.s
 	as --64 -o head.o head.s
 
-system:	head.o main.o printk.o
-	ld -b elf64-x86-64 -z muldefs -o system head.o main.o printk.o -T Kernel.lds 
+entry.o: entry.S
+	gcc -E  entry.S > entry.s
+	as --64 -o entry.o entry.s
+
+system:	head.o entry.o main.o printk.o trap.o memory.o
+	ld -b elf64-x86-64 -z muldefs -o system head.o entry.o main.o printk.o trap.o memory.o -T Kernel.lds 
 
 
 printk.o: printk.c 
 	gcc -mcmodel=large -fno-stack-protector -fno-builtin -m64 -c printk.c
 
+
+
 main.o: main.c lib.h
 	gcc -mcmodel=large -fno-stack-protector -fno-builtin -m64 -c main.c
+
+
+trap.o: trap.c
+	gcc -mcmodel=large -fno-stack-protector -fno-builtin -m64 -c trap.c
+
+memory.o: memory.c
+	gcc -mcmodel=large -fno-stack-protector -fno-builtin -m64 -c memory.c
+
 clean:
 	rm -rf *.o *.s~ *.s *.S~ *.c~ *.h~ system  Makefile~ Kernel.lds~ kernel.bin

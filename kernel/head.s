@@ -100,8 +100,8 @@ setup_TSS64:
  shrq $32, %rdx
  movq %rdx, 72(%rdi)
 
- mov $0x40, %ax
- ltr %ax
+
+
 
  movq go_to_kernel(%rip), %rax
  pushq $0x08
@@ -175,6 +175,7 @@ Loop:
  popq %rbx
  popq %rax
 
+ iretq
 int_msg:
  .asciz "Unknown interrupt or fault at RIP\n"
 

@@ -1,6 +1,10 @@
 #include "lib.h"
 #include "printk.h"
+#include "gate.h"
+#include "trap.h"
+#include "memory.h"
 
+struct Global_Memory_Descriptor memory_management_struct = {{0},0};
 void Start_Kernel(void)
 {
     int *addr = (int*)0xffff800000a00000;
@@ -56,7 +60,16 @@ void Start_Kernel(void)
     }
 
     color_printk(YELLOW,BLACK,"Fuck World!\n");
-    i = 1/0;
+    load_TR(8);
+    set_tss64(0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00,
+        0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00, 0xffff800000007c00,
+        0xffff800000007c00,0xffff800000007c00,0xffff800000007c00);
+
+    sys_vector_init();
+    //i = 1/0;
+    //i = *(int*)0xffff80000aa00000;
+    color_printk(RED,BLACK,"memory init \n");
+    init_memory();
     while (1);
     
     
