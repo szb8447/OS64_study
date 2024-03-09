@@ -3,12 +3,19 @@
 #include "gate.h"
 #include "trap.h"
 #include "memory.h"
+#include "interrupt.h"
+extern char _text;
+extern char _etext;
+extern char _edata;
+extern char _end;
 
 struct Global_Memory_Descriptor memory_management_struct = {{0},0};
 void Start_Kernel(void)
 {
     int *addr = (int*)0xffff800000a00000;
     int i;
+
+    struct Page* page = NULL;
 
     Pos.XResolution = 1440;
     Pos.YResolution = 900;
@@ -66,10 +73,34 @@ void Start_Kernel(void)
         0xffff800000007c00,0xffff800000007c00,0xffff800000007c00);
 
     sys_vector_init();
+    memory_management_struct.start_code = (unsigned long)& _text;
+    memory_management_struct.end_code = (unsigned long)& _etext;
+    memory_management_struct.end_data = (unsigned long)& _edata;
+    memory_management_struct.end_brk = (unsigned long)& _end;
     //i = 1/0;
     //i = *(int*)0xffff80000aa00000;
     color_printk(RED,BLACK,"memory init \n");
     init_memory();
+
+    //color_printk(RED,BLACK,"memory_management_struct.bits_map:%#0181x\n",*memory_management_struct.bits_map);
+
+    //color_printk(RED,BLACK,"memory_management_struct.bits_map:%#0181x\n",(*memory_management_struct.bits_map + 1));
+    
+    //page = alloc_pages(ZONE_NORMAL,64,PG_PTable_Maped | PG_Active | PG_Kernel);
+
+    //for(i = 0;i <= 64;i++)
+    // {
+    //     color_printk(INDIGD,BLACK,"page%d\tattribute:%#0181x\taddress:%#0181x\t",i,(page + i)->attribute,(page + i)->PHY_address);
+    //     i++;
+    //     color_printk(INDIGD,BLACK,"page%d\tattribute:%#0181x\taddress:%#0181x\n",i,(page + i)->attribute,(page + i)->PHY_address);
+    // }
+
+    // color_printk(RED,BLACK,"memory_management_struct.bits_map:%#0181x\n",*memory_management_struct.bits_map);
+
+    // color_printk(RED,BLACK,"memory_management_struct.bits_map:%#0181x\n",*(memory_management_struct.bits_map + 1));
+
+    color_printk(RED,BLACK,"interrupt init \n");
+    init_interrupt();
     while (1);
     
     

@@ -32,7 +32,8 @@
 #define io_mfence() 	__asm__ __volatile__ ("mfence	\n\t":::"memory")
 
 extern inline int strlen(char * String);
-
+extern inline void * memset(void * Address,unsigned char C,long Count);
+extern inline void io_out8(unsigned short port,unsigned char value);
 struct List
 {
 	struct List * prev;
